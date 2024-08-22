@@ -1,5 +1,5 @@
 # SyRA GAN: Synthetic Rain Generation using GAN
-## By Aaditya Gupta-IIT2021242 and Nitesh Kumar Shah-IIB2021002
+## By Nitesh Kumar Shah-IIB2021002 and Abhishek Bidhan
 ### Project Overview
 
 **SyRA GAN** (Synthetic Rain Generation using GAN) is a cutting-edge project aimed at enhancing flight simulators by incorporating synthetic rain effects. By leveraging the power of Generative Adversarial Networks (GANs), SyRA GAN simulates decreased visibility in the environment, providing a more realistic and challenging training experience for pilots.
