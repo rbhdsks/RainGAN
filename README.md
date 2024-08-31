@@ -1,4 +1,4 @@
-# SyRA GAN: Synthetic Rain Generation using GAN
+# RAINGAN: Rain Generation using GAN
 ## By Nitesh Kumar Shah-IIB2021002,Abhishek Bidhan-IIB2021002 and Ritesh Chandra (Supervisor: Research Scholar)
 ### Project Overview
 
