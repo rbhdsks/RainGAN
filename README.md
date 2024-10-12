@@ -2,15 +2,15 @@
 ## By Nitesh Kumar Shah-IIB2021002,Abhishek Bidhan-IIB2021002 and Ritesh Chandra (Supervisor: Research Scholar)
 ### Project Overview
 
-**SyRA GAN** (Synthetic Rain Generation using GAN) is a cutting-edge project aimed at enhancing flight simulators by incorporating synthetic rain effects. By leveraging the power of Generative Adversarial Networks (GANs), SyRA GAN simulates decreased visibility in the environment, providing a more realistic and challenging training experience for pilots.
+**Rain GAN** (Artificial Rain Generation using GAN) is a cutting-edge project aimed at enhancing flight simulators by incorporating synthetic rain effects. By leveraging the power of Generative Adversarial Networks (GANs), GAN simulates decreased visibility in the environment, providing a more realistic and challenging training experience for pilots.
 
-## Why SyRA GAN?
+## Why RAIN GAN?
 
-In flight simulation training, replicating adverse weather conditions such as rain is crucial for preparing pilots for real-world scenarios. SyRA GAN achieves this by generating high-quality synthetic rain effects that decrease visibility, making the simulation environment more immersive and realistic.
+In flight simulation training, replicating adverse weather conditions such as rain is crucial for preparing pilots for real-world scenarios. Rain GAN achieves this by generating high-quality synthetic rain effects that decrease visibility, making the simulation environment more immersive and realistic.
 
 ### Custom Dataset
 
-To train and evaluate SyRA GAN, we utilized two datasets:
+To train and evaluate Rain GAN, we utilized two datasets:
 
 1. **Flight Simulator Dataset** (Kaggle): A dataset consisting of approximately 12,000 clean images used as the base for generating synthetic rain effects.
 
@@ -22,7 +22,7 @@ To train and evaluate SyRA GAN, we utilized two datasets:
 ![Rain Effect Image](./rain_1.jpg)
 ### Objective
 
-The primary objective of SyRA GAN is to generate realistic synthetic rain effects to decrease visibility in flight simulators. Additionally, within the IIIT Dataset, the goal was to create rain effects to decrease visibility in the ADAS (Advanced Driver Assistance Systems) framework, thereby providing a more realistic training environment for both pilots and autonomous driving systems.
+The primary objective of Rain GAN is to generate realistic synthetic rain effects to decrease visibility in flight simulators. Additionally, within the IIIT Dataset, the goal was to create rain effects to decrease visibility in the ADAS (Advanced Driver Assistance Systems) framework, thereby providing a more realistic training environment for both pilots and autonomous driving systems.
 
 ## Why Use GANs?
 
@@ -46,7 +46,7 @@ GANs are ideally suited for generating realistic synthetic data. The architectur
 
 ## Key Tasks
 
-The main tasks tackled by SyRA GAN include:
+The main tasks tackled by Rain GAN include:
 
 - **Object Detection**: Identifying objects within the rain-affected images.
 - **Semantic Segmentation**: Classifying each pixel of an image into different categories.
@@ -54,11 +54,11 @@ The main tasks tackled by SyRA GAN include:
 
 ## Installation
 
-To run the SyRA GAN project locally, please follow these steps:
+To run the Rain GAN project locally, please follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/rbhdsks/SYRA.git
+   git clone https://github.com/rbhdsks/RainGan.git
 
 ## References
 [1] Yang, Wenhan, et al. "Deep joint rain detection and removal from a single image." Proceedings of the IEEE conference on computer vision and pattern recognition. 2017.
