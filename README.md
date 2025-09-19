@@ -1,5 +1,6 @@
 # RAINGAN: Rain Generation using GAN
-## By Nitesh Kumar Shah-IIB2021002 
+## By Nitesh Kumar Shah ID25M806, IIT Madras | Gadde Jahnavi SWE Microsoft | Dr. Navjot Singh (Associate Professor, IIIT Allahabad)
+#### Sponsored by Deep Intelligence Pty. Ltd, Sydney, Australia & CVBL Lab IIIT Allahabad
 ### Project Overview
 
 **Rain GAN** (Artificial Rain Generation using GAN) is a cutting-edge project aimed at enhancing flight simulators by incorporating synthetic rain effects. By leveraging the power of Generative Adversarial Networks (GANs), GAN simulates decreased visibility in the environment, providing a more realistic and challenging training experience for pilots.
@@ -70,3 +71,4 @@ To run the Rain GAN project locally, please follow these steps:
 [4] Fu, Xueyang, et al. "Removing rain from single images via a deep detail network." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2017.
 
 [5] Wang, Tianyu, et al. "Spatial attentive single-image deraining with a high quality real rain dataset." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2019.
+
