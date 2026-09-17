@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the RainGAN-Kathmandu paper and the dataset release."
+title: "RainGAN-Kathmandu reproducibility code"
+type: software
+version: 1.0.0
+date-released: 2026-09-17
+repository-code: "https://github.com/rbhdsks/RainGAN"
+authors:
+  - family-names: Shah
+    given-names: Nitesh Kumar
+  - family-names: Jahnavi
+    given-names: Gadde
+  - family-names: Singh
+    given-names: Navjot
+  - family-names: Maurya
+    given-names: Chandra Prakash
+  - family-names: Singh
+    given-names: Satish Kumar
+preferred-citation:
+  type: conference-paper
+  title: "RainGAN-Kathmandu: A Generative Adversarial Framework for Synthetic Rainfall Augmentation in Urban Road Scene Datasets"
+  year: 2025
+  conference:
+    name: "TENCON 2025 - 2025 IEEE Region 10 Conference"
+  doi: "10.1109/TENCON66050.2025.11374935"
+  start: 1858
+  end: 1862
+  authors:
+    - family-names: Shah
+      given-names: Nitesh Kumar
+    - family-names: Jahnavi
+      given-names: Gadde
+    - family-names: Singh
+      given-names: Navjot
+    - family-names: Maurya
+      given-names: Chandra Prakash
+    - family-names: Singh
+      given-names: Satish Kumar

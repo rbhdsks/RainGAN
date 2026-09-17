@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "raingan-kathmandu"
+version = "1.0.0"
+description = "Reproducible code for RainGAN-Kathmandu synthetic rainfall augmentation"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+authors = [
+  {name = "Nitesh Kumar Shah"},
+  {name = "Gadde Jahnavi"},
+  {name = "Navjot Singh"},
+  {name = "Chandra Prakash Maurya"},
+  {name = "Satish Kumar Singh"},
+]
+keywords = ["rain synthesis", "generative adversarial network", "computer vision", "autonomous driving"]
+dependencies = [
+  "munch==4.0.0",
+  "numpy==1.26.4",
+  "Pillow==10.4.0",
+  "PyYAML==6.0.2",
+  "torch==2.4.1",
+  "torchvision==0.19.1",
+  "tqdm==4.66.5",
+]
+
+[project.optional-dependencies]
+evaluation = [
+  "torch-fidelity==0.3.0",
+  "torchmetrics[image]==1.4.2",
+]
+high-pass = [
+  "ffmpeg-python==0.2.0",
+  "opencv-python-headless==4.10.0.84",
+  "scikit-image==0.24.0",
+]
+dev = [
+  "pytest==8.3.3",
+  "ruff==0.6.8",
+]
+
+[project.urls]
+Repository = "https://github.com/rbhdsks/RainGAN"
+Paper = "https://doi.org/10.1109/TENCON66050.2025.11374935"
+Dataset = "https://doi.org/10.7910/DVN/YJRUP4"
+
+[project.scripts]
+raingan = "main:main"
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+include = ["core*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+exclude = ["core/wing.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
