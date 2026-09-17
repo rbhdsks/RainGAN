@@ -8,25 +8,18 @@ http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to
 Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 """
 
-import os
-from os.path import join as ospj
 import json
-import glob
-from shutil import copyfile
-
-from tqdm import tqdm
-import ffmpeg
+from pathlib import Path
 
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torchvision
 import torchvision.utils as vutils
 
 
 def save_json(json_file, filename):
-    with open(filename, 'w') as f:
+    with open(filename, "w", encoding="utf-8") as f:
         json.dump(json_file, f, indent=4, sort_keys=False)
 
 
@@ -40,11 +33,11 @@ def print_network(network, name):
 
 def he_init(module):
     if isinstance(module, nn.Conv2d):
-        nn.init.kaiming_normal_(module.weight, mode='fan_in', nonlinearity='relu')
+        nn.init.kaiming_normal_(module.weight, mode="fan_in", nonlinearity="relu")
         if module.bias is not None:
             nn.init.constant_(module.bias, 0)
     if isinstance(module, nn.Linear):
-        nn.init.kaiming_normal_(module.weight, mode='fan_in', nonlinearity='relu')
+        nn.init.kaiming_normal_(module.weight, mode="fan_in", nonlinearity="relu")
         if module.bias is not None:
             nn.init.constant_(module.bias, 0)
 
@@ -55,6 +48,7 @@ def denormalize(x):
 
 
 def save_image(x, ncol, filename):
+    Path(filename).parent.mkdir(parents=True, exist_ok=True)
     x = denormalize(x)
     vutils.save_image(x.cpu(), filename, nrow=ncol, padding=0)
 
@@ -66,7 +60,7 @@ def translate_using_latent(nets, args, x_src, y_trg_list, z_trg_list, psi, filen
     x_concat = [x_src]
     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
 
-    for i, y_trg in enumerate(y_trg_list):
+    for y_trg in y_trg_list:
         z_many = torch.randn(10000, latent_dim).to(x_src.device)
         y_many = torch.LongTensor(10000).to(x_src.device).fill_(y_trg[0])
         s_many = nets.mapping_network(z_many, y_many)
@@ -85,54 +79,59 @@ def translate_using_latent(nets, args, x_src, y_trg_list, z_trg_list, psi, filen
 
 @torch.no_grad()
 def debug_image(nets, args, inputs, step):
-    x_src, y_src = inputs.x_src, inputs.y_src
+    x_src = inputs.x_src
 
     device = inputs.x_src.device
     N = inputs.x_src.size(0)
 
-    y_trg_list = [torch.tensor(1).repeat(N).to(device)
-                  for y in range(min(1, 5))]
-    z_trg_list = torch.randn(args.num_outs_per_domain*2, 1, args.latent_dim).repeat(1, N, 1).to(device)
+    y_trg_list = [torch.full((N,), args.target_domain, device=device, dtype=torch.long)]
+    z_trg_list = (
+        torch.randn(args.num_outs_per_domain * 2, 1, args.latent_dim).repeat(1, N, 1).to(device)
+    )
 
     for psi in [1.0]:
-        filename = ospj(args.sample_dir, '%06d_latent_psi_%.1f.jpg' % (step, psi))
+        filename = str(Path(args.sample_dir) / f"{step:06d}_latent_psi_{psi:.1f}.jpg")
         translate_using_latent(nets, args, x_src, y_trg_list, z_trg_list, psi, filename)
 
 
 @torch.no_grad()
-def synthesis_image(nets, args, inputs, step, file_list):
-    x_src, y_src = inputs.x_src, inputs.y_src
+def synthesis_images(nets, args, inputs):
+    """Generate variants for one batch and return manifest rows."""
+    source = inputs.x_src
+    batch_size = source.size(0)
+    device = source.device
+    targets = torch.full((batch_size,), args.target_domain, device=device, dtype=torch.long)
+    latents = torch.randn(args.num_outs_per_domain, batch_size, args.latent_dim, device=device)
+    masks = nets.fan.get_heatmap(source) if args.w_hpf > 0 else None
+    generated = []
+    for latent in latents:
+        style = nets.mapping_network(latent, targets)
+        generated.append(nets.generator(source, style, masks=masks))
 
-    device = inputs.x_src.device
-    N, C, H, W = x_src.size()
+    records = []
+    for index, source_name in enumerate(inputs.paths):
+        relative = Path(source_name)
+        item_dir = Path(args.out_dir) / relative.parent / relative.stem
+        item_dir.mkdir(parents=True, exist_ok=True)
+        clear_path = item_dir / "clear.png"
+        save_image(source[index], 1, clear_path)
+        for variant, images in enumerate(generated):
+            output_path = item_dir / f"rain_{variant:02d}.png"
+            save_image(images[index], 1, output_path)
+            records.append(
+                {
+                    "source": relative.as_posix(),
+                    "output": output_path.relative_to(args.out_dir).as_posix(),
+                    "variant": variant,
+                    "seed": args.seed,
+                    "checkpoint_iteration": args.resume_iter,
+                }
+            )
+    return records
 
-    y_trg_list = [torch.tensor(1).repeat(N).to(device)
-                  for y in range(min(1, 5))]
-    z_trg_list = torch.randn(args.num_outs_per_domain, 1, args.latent_dim).repeat(1, N, 1).to(device)
-
-    [os.makedirs(args.out_dir+'/%04d' % (args.val_batch_size*step+i), exist_ok=True) for i in range(args.val_batch_size)]
-
-    for psi in [1.0]:
-        filename = ospj(args.out_dir, 'Syn_%04d.jpg' % (step))
-
-        x_concat = [x_src]
-        masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
-
-        [save_image(x_src[y], 1, ospj(args.out_dir+'/%04d' % (args.val_batch_size*step+y), 'Clear' + file_list[step])) for y in range(args.val_batch_size)]
-        print("File List Step", file_list[step])
-
-        for i, y_trg in enumerate(y_trg_list):
-            for j, z_trg in enumerate(z_trg_list):
-                s_trg = nets.mapping_network(z_trg, y_trg)
-                x_fake = nets.generator(x_src, s_trg, masks=masks)
-                x_concat += [x_fake]
-                [save_image(x_fake[y], 1, ospj(args.out_dir + '/%04d' % (args.val_batch_size * step + y), 'rain_%d.jpg'
-                 % (j))) for y in range(args.val_batch_size)]
-        x_concat = torch.cat(x_concat, dim=0)
-        save_image(x_concat, N, filename)
 
 def sigmoid(x, w=1):
-    return 1. / (1 + np.exp(-w * x))
+    return 1.0 / (1 + np.exp(-w * x))
 
 
 def get_alphas(start=-5, end=5, step=0.5, len_tail=10):
@@ -140,7 +139,7 @@ def get_alphas(start=-5, end=5, step=0.5, len_tail=10):
 
 
 def interpolate(nets, args, x_src, s_prev, s_next):
-    ''' returns T x C x H x W '''
+    """returns T x C x H x W"""
     B = x_src.size(0)
     frames = []
     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
