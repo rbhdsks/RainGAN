@@ -1,0 +1,54 @@
+# Configuration used to reproduce the RainGAN-Kathmandu generation pipeline.
+experiment_name: raingan_kathmandu
+seed: 777
+device: auto
+deterministic: true
+
+model:
+  image_size: 256
+  num_domains: 2
+  latent_dim: 16
+  hidden_dim: 512
+  style_dim: 64
+  high_pass_weight: 0
+  target_domain: 1
+
+training:
+  total_iterations: 100000
+  resume_iteration: 0
+  batch_size: 8
+  validation_batch_size: 1
+  learning_rate: 0.0001
+  mapping_learning_rate: 0.000001
+  beta1: 0.01
+  beta2: 0.99
+  weight_decay: 0.0001
+  random_crop_probability: 0.5
+  # Zero workers keeps augmentation RNG state in the main process, which
+  # allows interrupted runs to resume from a recorded RNG state.
+  num_workers: 0
+
+loss:
+  r1: 1.0
+  identity: 1.0
+  style: 1.0
+  diversity: 1.0
+  diversity_decay_iterations: 150000
+  rain_streak_guidance: true
+  rain_streak_guidance_weight: 0.1
+  npmi: 0.1
+
+paths:
+  train: data/rains/train
+  validation: data/rains/val
+  inference: data/kathmandu/clear
+  checkpoints: artifacts/checkpoints/raingan_kathmandu
+  samples: artifacts/samples/raingan_kathmandu
+  outputs: artifacts/generated/raingan_kathmandu
+  evaluation: artifacts/evaluation/raingan_kathmandu
+
+logging:
+  print_every: 10
+  sample_every: 10000
+  save_every: 10000
+  outputs_per_image: 5

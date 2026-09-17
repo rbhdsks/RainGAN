@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Environments and editors
+.venv/
+venv/
+.env
+.DS_Store
+.idea/
+.vscode/
+
+# Research data and generated artifacts
+data/
+artifacts/
+outputs/
+expr/
+checkpoints/
+wandb/
+*.ckpt
+*.pth
+*.pt
+
+# Obsolete files retained only in historical commits
+/assets/
+/SYRA_GAN_Project_Document.pdf
+/SYRA_GRAPH.ipynb
+/Syn_3004.jpg
+/rain_1.jpg
+
+# Local reports
+*.log
+coverage.xml
+htmlcov/
+
+!.gitkeep
